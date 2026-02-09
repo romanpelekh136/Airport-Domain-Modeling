@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  flight: one
+  aircraft: one
+  scheduled_departure_at: 2026-02-09 17:04:35
+  scheduled_arrival_at: 2026-02-09 17:04:35
+  status: MyString
+
+two:
+  flight: two
+  aircraft: two
+  scheduled_departure_at: 2026-02-09 17:04:35
+  scheduled_arrival_at: 2026-02-09 17:04:35
+  status: MyString
