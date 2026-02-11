@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_11_173402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,41 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "baggages", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.integer "weight"
+    t.string "tag_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ticket_id"], name: "index_baggages_on_ticket_id"
+  end
+
+  create_table "boarding_passes", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.bigint "seat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["seat_id"], name: "index_boarding_passes_on_seat_id"
+    t.index ["ticket_id"], name: "index_boarding_passes_on_ticket_id"
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.string "reference_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "checkin_assignments", force: :cascade do |t|
+    t.bigint "flight_instance_id", null: false
+    t.bigint "checkin_counter_id", null: false
+    t.datetime "active_from"
+    t.datetime "active_to"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["checkin_counter_id"], name: "index_checkin_assignments_on_checkin_counter_id"
+    t.index ["flight_instance_id"], name: "index_checkin_assignments_on_flight_instance_id"
   end
 
   create_table "checkin_counters", force: :cascade do |t|
@@ -85,6 +120,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
     t.index ["terminal_id"], name: "index_gates_on_terminal_id"
   end
 
+  create_table "passengers", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "doc_number"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "seats", force: :cascade do |t|
     t.string "seat_number"
     t.string "cabin_class"
@@ -102,7 +146,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
     t.index ["airport_id"], name: "index_terminals_on_airport_id"
   end
 
+  create_table "tickets", force: :cascade do |t|
+    t.bigint "booking_id", null: false
+    t.bigint "passenger_id", null: false
+    t.bigint "flight_instance_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_tickets_on_booking_id"
+    t.index ["flight_instance_id"], name: "index_tickets_on_flight_instance_id"
+    t.index ["passenger_id"], name: "index_tickets_on_passenger_id"
+  end
+
   add_foreign_key "aircrafts", "airlines"
+  add_foreign_key "baggages", "tickets"
+  add_foreign_key "boarding_passes", "seats"
+  add_foreign_key "boarding_passes", "tickets"
+  add_foreign_key "checkin_assignments", "checkin_counters"
+  add_foreign_key "checkin_assignments", "flight_instances"
   add_foreign_key "checkin_counters", "terminals"
   add_foreign_key "flight_instances", "aircrafts"
   add_foreign_key "flight_instances", "flights"
@@ -114,4 +174,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
   add_foreign_key "gates", "terminals"
   add_foreign_key "seats", "aircrafts"
   add_foreign_key "terminals", "airports"
+  add_foreign_key "tickets", "bookings"
+  add_foreign_key "tickets", "flight_instances"
+  add_foreign_key "tickets", "passengers"
 end
