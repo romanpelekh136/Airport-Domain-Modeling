@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_09_165305) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_11_161917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_165305) do
     t.index ["terminal_id"], name: "index_checkin_counters_on_terminal_id"
   end
 
+  create_table "flight_instances", force: :cascade do |t|
+    t.bigint "flight_id", null: false
+    t.bigint "aircraft_id", null: false
+    t.datetime "scheduled_departure_at", null: false
+    t.datetime "scheduled_arrival_at", null: false
+    t.string "status", default: "scheduled", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["aircraft_id"], name: "index_flight_instances_on_aircraft_id"
+    t.index ["flight_id"], name: "index_flight_instances_on_flight_id"
+  end
+
   create_table "flights", force: :cascade do |t|
     t.string "flight_number"
     t.bigint "airline_id", null: false
@@ -52,6 +64,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_165305) do
     t.index ["airline_id"], name: "index_flights_on_airline_id"
     t.index ["destination_airport_id"], name: "index_flights_on_destination_airport_id"
     t.index ["origin_airport_id"], name: "index_flights_on_origin_airport_id"
+  end
+
+  create_table "gate_assignments", force: :cascade do |t|
+    t.bigint "gate_id", null: false
+    t.bigint "flight_instance_id", null: false
+    t.datetime "active_from"
+    t.datetime "active_to"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["flight_instance_id"], name: "index_gate_assignments_on_flight_instance_id"
+    t.index ["gate_id"], name: "index_gate_assignments_on_gate_id"
   end
 
   create_table "gates", force: :cascade do |t|
@@ -81,9 +104,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_165305) do
 
   add_foreign_key "aircrafts", "airlines"
   add_foreign_key "checkin_counters", "terminals"
+  add_foreign_key "flight_instances", "aircrafts"
+  add_foreign_key "flight_instances", "flights"
   add_foreign_key "flights", "airlines"
   add_foreign_key "flights", "airports", column: "destination_airport_id"
   add_foreign_key "flights", "airports", column: "origin_airport_id"
+  add_foreign_key "gate_assignments", "flight_instances"
+  add_foreign_key "gate_assignments", "gates"
   add_foreign_key "gates", "terminals"
   add_foreign_key "seats", "aircrafts"
   add_foreign_key "terminals", "airports"

@@ -10,6 +10,8 @@ class Flight < ApplicationRecord
 
   validate :origin_and_destination_must_be_different
 
+  private
+
   def origin_and_destination_must_be_different
     if origin_airport_id == destination_airport_id
       errors.add(:destination_airport, "must be different from origin airport")
