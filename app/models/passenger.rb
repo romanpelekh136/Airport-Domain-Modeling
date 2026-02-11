@@ -5,5 +5,5 @@ class Passenger < ApplicationRecord
   validates :last_name, presence: true
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :passport_number, presence: true, uniqueness: true
+  validates :doc_number, presence: true, uniqueness: true
 end
