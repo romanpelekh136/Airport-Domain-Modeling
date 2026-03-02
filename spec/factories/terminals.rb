@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :terminal do
-    name { "Terminal A" }
+    code { "A1" }
     association :airport
   end
 end
