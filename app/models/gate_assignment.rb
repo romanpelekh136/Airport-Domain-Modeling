@@ -6,6 +6,7 @@ class GateAssignment < ApplicationRecord
   validates :active_from, presence: true
 
   validate :end_after_start
+  validate :gate_must_be_free_during_time
 
   private
 
@@ -16,7 +17,7 @@ class GateAssignment < ApplicationRecord
     end
   end
 
-  def gete_must_be_free_during_time
+  def gate_must_be_free_during_time
     return unless active_to && active_from
 
     assignments = GateAssignment.where(gate_id: gate_id)

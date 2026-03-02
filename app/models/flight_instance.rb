@@ -14,6 +14,9 @@ class FlightInstance < ApplicationRecord
   validates :scheduled_departure_at, presence: true
   validates :scheduled_arrival_at, presence: true
 
+  validate :arrival_after_departure
+
+  private
 
   def arrival_after_departure
     if scheduled_arrival_at <= scheduled_departure_at

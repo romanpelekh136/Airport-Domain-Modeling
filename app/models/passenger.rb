@@ -1,5 +1,5 @@
 class Passenger < ApplicationRecord
-  has_many :tickets, dependent: destroy
+  has_many :tickets, dependent: :destroy
 
   validates :first_name, presence: true
   validates :last_name, presence: true
